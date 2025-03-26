@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema(
     email: { type: String, required: true },
     social: { type: String, required: true },
   },
-  { collection: "test_donasi" }
+  { collection: "users" }
 );
 
 module.exports = mongoose.model("User", userSchema);
