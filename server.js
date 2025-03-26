@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const userRoutes = require("./routes/userRoutes");
+const { swaggerUi, specs } = require("./swagger");
 
 // Inisialisasi Express
 const app = express();
@@ -12,6 +13,9 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(cors());
 app.use(bodyParser.json());
+
+// Integrasi Swagger
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
 // Koneksi ke MongoDB
 mongoose

@@ -5,7 +5,36 @@ const upload = require("../middleware/uploadPict");
 
 const router = express.Router();
 
-// Endpoint regist user
+/**
+ * @swagger
+ * /users/regist:
+ *   post:
+ *     summary: Registrasi user baru
+ *     description: Menambahkan user baru ke database dengan gambar profil
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               address:
+ *                 type: string
+ *               name:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               social:
+ *                 type: string
+ *               image:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       201:
+ *         description: User berhasil disimpan!
+ *       400:
+ *         description: Gambar harus diupload atau request tidak valid.
+ */
 router.post("/regist", upload.single("image"), async (req, res) => {
   try {
     const { address, name, email, social } = req.body;
@@ -29,7 +58,26 @@ router.post("/regist", upload.single("image"), async (req, res) => {
   }
 });
 
-// Endpoint GET user berdasarkan address
+/**
+ * @swagger
+ * /users/searchByAddress:
+ *   get:
+ *     summary: Cari user berdasarkan address
+ *     description: Mengambil daftar user berdasarkan address yang diberikan.
+ *     parameters:
+ *       - name: address
+ *         in: query
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Data user yang cocok ditemukan
+ *       400:
+ *         description: Address harus diberikan
+ *       404:
+ *         description: User tidak ditemukan
+ */
 router.get("/searchByAddress", async (req, res) => {
   try {
     const { address } = req.query;
@@ -48,7 +96,44 @@ router.get("/searchByAddress", async (req, res) => {
   }
 });
 
-// Endpoint update user
+/**
+ * @swagger
+ * /users/update/{id}:
+ *   put:
+ *     summary: Update user
+ *     description: Mengupdate data user berdasarkan ID
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               address:
+ *                 type: string
+ *               name:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               social:
+ *                 type: string
+ *               image:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       200:
+ *         description: User berhasil diperbarui
+ *       400:
+ *         description: ID tidak valid atau request tidak valid
+ *       404:
+ *         description: User tidak ditemukan
+ */
 router.put("/update/:id", upload.single("image"), async (req, res) => {
   try {
     const { id } = req.params;
@@ -77,7 +162,26 @@ router.put("/update/:id", upload.single("image"), async (req, res) => {
   }
 });
 
-// Endpoint delete user
+/**
+ * @swagger
+ * /users/delete/{address}:
+ *   delete:
+ *     summary: Delete user berdasarkan address
+ *     description: Menghapus user berdasarkan address yang diberikan.
+ *     parameters:
+ *       - name: address
+ *         in: query
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Data user yang cocok ditemukan
+ *       400:
+ *         description: Address harus diberikan
+ *       404:
+ *         description: User tidak ditemukan
+ */
 router.delete("/delete/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -99,7 +203,18 @@ router.delete("/delete/:id", async (req, res) => {
   }
 });
 
-// GET semua data dari test_donasi
+/**
+ * @swagger
+ * /users/allData:
+ *   get:
+ *     summary: Ambil semua data user
+ *     description: Mengambil seluruh data user yang tersimpan di database.
+ *     responses:
+ *       200:
+ *         description: Data user berhasil diambil
+ *       500:
+ *         description: Terjadi kesalahan server
+ */
 router.get("/allData", async (req, res) => {
   try {
     const users = await User.find();
@@ -108,20 +223,5 @@ router.get("/allData", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
-
-// // POST data baru ke test_donasi
-// router.post("/", async (req, res) => {
-//   try {
-//     const newUser = new User({
-//       addres: req.body.addres,
-//       name: req.body.name,
-//       alamat: req.body.alamat,
-//     });
-//     const savedUser = await newUser.save();
-//     res.status(201).json(savedUser);
-//   } catch (err) {
-//     res.status(400).json({ error: err.message });
-//   }
-// });
 
 module.exports = router;
