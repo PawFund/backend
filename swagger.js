@@ -1,5 +1,5 @@
-const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
+const swaggerJsdoc = require("swagger-jsdoc");
 
 const options = {
   definition: {
@@ -11,13 +11,16 @@ const options = {
     },
     servers: [
       {
-        url: "backend-production-acca.up.railway.app", // Ganti dengan URL API yang sudah dideploy
+        url: "https://backend-production-acca.up.railway.app",
+        description: "Production server",
       },
     ],
   },
-  apis: ["./routes/*.js"], // Path ke file routes
+  apis: ["./routes/*.js"], // Pastikan path ke file route benar
 };
 
-const specs = swaggerJsdoc(options);
+const swaggerSpec = swaggerJsdoc(options);
 
-module.exports = { swaggerUi, specs };
+module.exports = (app) => {
+  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+};
