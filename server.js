@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const userRoutes = require("./routes/userRoutes");
+const campaignRoutes = require("./routes/campaignRoutes");
 const swaggerDocs = require("./swagger");
 
 // Inisialisasi Express
@@ -28,6 +29,7 @@ mongoose
 
 // Routes
 app.use("/users", userRoutes);
+app.use("/campaigns", campaignRoutes);
 
 // Route sederhana
 app.get("/", (req, res) => {
